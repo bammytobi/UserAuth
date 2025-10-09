@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+from fastapi.middleware.cors import CORSMiddleware
 import mysql.connector
 from datetime import datetime, timedelta
 
@@ -16,7 +17,22 @@ pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 # --- OAuth2 ---
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-app = FastAPI()
+# ✅ --- Enable CORS ---
+origins = [
+    "http://localhost:3000",  # React local dev
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",  # Vite local dev
+    "http://127.0.0.1:5173",
+    "*"  # ⚠️ Allow all origins (use specific domains in production)
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,        # domains that can access the API
+    allow_credentials=True,
+    allow_methods=["*"],          # allow all HTTP methods
+    allow_headers=["*"],          # allow all headers
+)
 
 # --- MySQL Connection ---
 def get_db():
