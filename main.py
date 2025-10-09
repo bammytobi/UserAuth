@@ -17,6 +17,8 @@ pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 # --- OAuth2 ---
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
+app = FastAPI(title="🔐 FastAPI MySQL Auth API")
+
 # ✅ --- Enable CORS ---
 origins = [
     "http://localhost:3000",  # React local dev
